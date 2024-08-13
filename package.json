@@ -2,7 +2,7 @@
   "name": "vercel-url",
   "module": "index.ts",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "dist/index.js",
   "description": "Utility constant values for getting Vercel Deployment URLs",
   "repository": "https://github.com/markeljan/vercel-url.git",
