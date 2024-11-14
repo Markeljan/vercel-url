@@ -12,6 +12,6 @@ export const DEPLOYMENT_URL = (() => {
 		case "preview":
 			return `https://${VERCEL_BRANCH_URL || VERCEL_URL}`;
 		default:
-			return "http://localhost:3000";
+			return `http://localhost:${process.env.PORT || 3000}`;
 	}
 })();
