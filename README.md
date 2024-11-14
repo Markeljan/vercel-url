@@ -1,6 +1,6 @@
 # vercel-url
 
-A helper package that determines the Vercel deployment url `DEPLOYMENT_URL` at build time.  Also provides easier access to Vercel system environment variables.  Great for replacing `APP_URL`, `NEXT_PUBLIC_URL`, or runtime `getBaseUrl()` functions where applicable.
+A helper package that determines the Vercel deployment url `DEPLOYMENT_URL` at build time. Also provides easier access to Vercel system environment variables. Great for replacing `APP_URL`, `NEXT_PUBLIC_URL`, or runtime `getBaseUrl()` functions where applicable.
 
 ## Installation
 
@@ -54,8 +54,8 @@ Important Note: These variables are not automatically exposed or leaked when you
 
 1. Dynamic URL setting at build time
 2. Values can be used both server-side and client-side
-2. Seamless integration with Vercel deployments
-3. Use Vercel system env variables directly without `process.env`
+3. Seamless integration with Vercel deployments
+4. Use Vercel system env variables directly without `process.env`
 
 ## Security Considerations
 

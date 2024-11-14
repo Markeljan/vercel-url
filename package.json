@@ -1,33 +1,22 @@
 {
-  "name": "vercel-url",
-  "module": "index.ts",
-  "type": "module",
-  "version": "0.2.1",
-  "main": "dist/index.js",
-  "description": "Utility constant values for getting Vercel Deployment URLs",
-  "repository": "https://github.com/markeljan/vercel-url.git",
-  "keywords": [
-    "vercel",
-    "vercel_url",
-    "next_public_vercel_url",
-    "deployment",
-    "url"
-  ],
-  "author": "Markeljan Sokoli",
-  "license": "MIT",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "bun build --target=node ./src/index.ts --outfile=dist/index.js && bun run build:declaration",
-    "build:declaration": "tsc --emitDeclarationOnly --project tsconfig.types.json"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "files": [
-    "dist/*.js",
-    "dist/*.d.ts"
-  ]
+	"name": "vercel-url",
+	"module": "index.ts",
+	"type": "module",
+	"version": "0.2.3",
+	"main": "dist/index.js",
+	"description": "Helper for resolving the active url at buildtime for local and Vercel deployments using Vercel's system environment variables.",
+	"repository": "https://github.com/markeljan/vercel-url.git",
+	"keywords": ["vercel", "vercel-url", "vercel-deployment-url"],
+	"author": "Markeljan Sokoli",
+	"license": "MIT",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "bun build --target=node ./src/index.ts --outfile=dist/index.js && bun run build:declaration",
+		"build:declaration": "tsc --emitDeclarationOnly --project tsconfig.types.json"
+	},
+	"devDependencies": {
+		"@types/bun": "^1.1.13",
+		"typescript": "^5.6.3"
+	},
+	"files": ["dist/*.js", "dist/*.d.ts"]
 }
