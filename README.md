@@ -1,5 +1,7 @@
 # vercel-url
 
+[![npm version](https://img.shields.io/npm/v/vercel-url.svg)](https://www.npmjs.com/package/vercel-url)
+
 A helper package that determines the Vercel deployment url `DEPLOYMENT_URL` at build time. Also provides easier access to Vercel system environment variables. Great for replacing `APP_URL`, `NEXT_PUBLIC_URL`, or runtime `getBaseUrl()` functions where applicable.
 
 ## Installation
