@@ -2,7 +2,7 @@
   "name": "vercel-url",
   "module": "index.ts",
   "type": "module",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "main": "dist/index.js",
   "description": "Helper for resolving the active url at buildtime for local and Vercel deployments using Vercel's system environment variables.",
   "repository": {
@@ -16,17 +16,17 @@
   ],
   "author": "Markeljan Sokoli",
   "license": "MIT",
-  "types": "build/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "bun build --target=node ./src/index.ts --outfile=build/index.js",
-    "build:declaration": "tsc --emitDeclarationOnly --project tsconfig.types.json"
+    "build": "bun build --target=node ./src/index.ts --outfile=dist/index.js",
+    "build:types": "bun tsc"
   },
   "devDependencies": {
     "typescript": "^5",
     "@types/node": "^20"
   },
   "files": [
-    "build/*.js",
-    "build/*.d.ts"
+    "dist/*.js",
+    "dist/*.d.ts"
   ]
 }
