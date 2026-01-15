@@ -1,9 +1,21 @@
 {
   "name": "vercel-url",
-  "module": "index.ts",
+  "version": "0.3.1",
   "type": "module",
-  "version": "0.2.8",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.md"
+  ],
   "description": "Helper for resolving the active url at buildtime for local and Vercel deployments using Vercel's system environment variables.",
   "repository": {
     "type": "git",
@@ -12,22 +24,25 @@
   "keywords": [
     "vercel",
     "vercel-url",
-    "vercel-deployment-url"
+    "vercel-deployment-url",
+    "deployment-url",
+    "buildtime-url"
   ],
   "author": "Markeljan Sokoli",
   "license": "MIT",
-  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "bun build --target=node ./src/index.ts --outfile=dist/index.js",
-    "build:types": "bun tsc"
+    "lint": "ultracite check",
+    "format": "ultracite fix",
+    "build:types": "tsc",
+    "build": "bun build --target=node ./src/index.ts --outfile=dist/index.js && bun run build:types",
+    "prepublishOnly": "bun run build",
+    "prepare": "bunx lefthook install"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
+    "@biomejs/biome": "2.3.11",
     "@types/node": "^20",
-    "typescript": "^5"
-  },
-  "files": [
-    "dist/*.js",
-    "dist/*.d.ts"
-  ]
+    "lefthook": "^2.0.15",
+    "typescript": "^5",
+    "ultracite": "7.0.11"
+  }
 }
