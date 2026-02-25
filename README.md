@@ -46,8 +46,8 @@ import {
 This package determines the `DEPLOYMENT_URL` based on the environment:
 
 - **In development** (when `VERCEL !== "1"`): 
-  - Uses `TUNNEL_URL` if set (useful for tunnels/proxies like ngrok, Cloudflare Tunnel)
-  - Adds `https://` protocol if `TUNNEL_URL` doesn't include a protocol
+  - Uses `TUNNEL_URL` or `NEXT_PUBLIC_TUNNEL_URL` if set (useful for tunnels/proxies like ngrok, Cloudflare Tunnel)
+  - Adds `https://` protocol if the tunnel URL doesn't include a protocol
   - Otherwise defaults to `http://localhost:3000` (or the port specified in `PORT` env var)
 - **In Vercel preview** (when `VERCEL_ENV === "preview"`): 
   - Uses `VERCEL_BRANCH_URL` if available (prefixed with `https://`)
@@ -57,13 +57,17 @@ This package determines the `DEPLOYMENT_URL` based on the environment:
   - Falls back to `VERCEL_URL` (prefixed with `https://`)
 - **Default fallback**: `https://${VERCEL_URL}` or `https://localhost:3000` if `VERCEL_URL` is not set
 
-### Using TUNNEL_URL for Development
+### Using `TUNNEL_URL` / `NEXT_PUBLIC_TUNNEL_URL` for Development
 
-When developing locally with a tunnel service (like ngrok or Cloudflare Tunnel), you can set the `TUNNEL_URL` environment variable to override the default localhost URL:
+When developing locally with a tunnel service (like ngrok or Cloudflare Tunnel), you can set either `TUNNEL_URL` or `NEXT_PUBLIC_TUNNEL_URL` to override the default localhost URL. If both are set, `TUNNEL_URL` takes precedence.
 
 ```bash
 # Example with ngrok
 export TUNNEL_URL=https://abc123.ngrok.io
+npm run dev
+
+# Example with Next.js-style public env var
+export NEXT_PUBLIC_TUNNEL_URL=https://abc123.ngrok.io
 npm run dev
 
 # Example with Cloudflare Tunnel
@@ -71,7 +75,7 @@ export TUNNEL_URL=https://your-tunnel.trycloudflare.com
 npm run dev
 ```
 
-The `TUNNEL_URL` can include the protocol (`https://`) or omit it - the package will add `https://` automatically if needed.
+The tunnel URL (`TUNNEL_URL` or `NEXT_PUBLIC_TUNNEL_URL`) can include the protocol (`https://`) or omit it - the package will add `https://` automatically if needed.
 
 ## Caveats
 

@@ -5,7 +5,7 @@
 
 /**
  * Returns the current deployment URL based on environment
- * - Development: TUNNEL_URL if set, otherwise localhost with port
+ * - Development: TUNNEL_URL or NEXT_PUBLIC_TUNNEL_URL if set, otherwise localhost with port
  * - Vercel Preview: Branch/preview URL
  * - Vercel Production: Production URL
  */
@@ -15,8 +15,10 @@ function getDeploymentUrl(): string {
 
   if (!isVercel) {
     // Development environment
-    // Check for TUNNEL_URL first (for tunnels/proxies during development)
-    const tunnelUrl = process.env.TUNNEL_URL;
+    // Check for a tunnel/proxy URL during development.
+    // TUNNEL_URL takes precedence when both are set.
+    const tunnelUrl =
+      process.env.TUNNEL_URL || process.env.NEXT_PUBLIC_TUNNEL_URL;
     if (tunnelUrl) {
       // Ensure it has a protocol
       return tunnelUrl.startsWith("http") ? tunnelUrl : `https://${tunnelUrl}`;

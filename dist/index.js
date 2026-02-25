@@ -2,7 +2,7 @@
 function getDeploymentUrl() {
   const isVercel = process.env.VERCEL === "1";
   if (!isVercel) {
-    const tunnelUrl = process.env.TUNNEL_URL;
+    const tunnelUrl = process.env.TUNNEL_URL || process.env.NEXT_PUBLIC_TUNNEL_URL;
     if (tunnelUrl) {
       return tunnelUrl.startsWith("http") ? tunnelUrl : `https://${tunnelUrl}`;
     }
