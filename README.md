@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/vercel-url.svg)](https://www.npmjs.com/package/vercel-url)
 
-A helper package that determines the Vercel deployment url `DEPLOYMENT_URL` at build time. Also provides easier access to Vercel system environment variables. Great for replacing `APP_URL`, `NEXT_PUBLIC_URL`, or other runtime URL resolution logic with a build-time constant.
+A helper package that determines the Vercel deployment url `DEPLOYMENT_URL` at build time. It now resolves from framework-prefixed Vercel environment variables (for client bundles) and falls back to Vercel system environment variables (server/runtime), so the result stays consistent across server and client. Great for replacing `APP_URL`, `NEXT_PUBLIC_URL`, or other runtime URL resolution logic with a build-time constant.
 
 ## Installation
 
@@ -37,25 +37,41 @@ import {
 ## Features
 
 - Dynamically sets the URL at build time
-- Can be used both server-side and client-side
+- Can be used both server-side and client-side (via framework-prefixed Vercel env vars)
 - Provides easier access to Vercel system environment variables
 - Supports tunnel URLs for local development with proxies (e.g., ngrok, Cloudflare Tunnel)
 
 ## How it works
 
-This package determines the `DEPLOYMENT_URL` based on the environment:
+This package determines the `DEPLOYMENT_URL` based on the environment. It prefers framework-prefixed Vercel variables first (for example `NEXT_PUBLIC_VERCEL_URL`, `VITE_VERCEL_URL`, `PUBLIC_VERCEL_URL`) and falls back to Vercel system variables (`VERCEL_URL`, `VERCEL_BRANCH_URL`, etc.):
 
 - **In development** (when `VERCEL !== "1"`): 
   - Uses `TUNNEL_URL` or `NEXT_PUBLIC_TUNNEL_URL` if set (useful for tunnels/proxies like ngrok, Cloudflare Tunnel)
   - Adds `https://` protocol if the tunnel URL doesn't include a protocol
   - Otherwise defaults to `http://localhost:3000` (or the port specified in `PORT` env var)
-- **In Vercel preview** (when `VERCEL_ENV === "preview"`): 
-  - Uses `VERCEL_BRANCH_URL` if available (prefixed with `https://`)
-  - Falls back to `VERCEL_URL` (prefixed with `https://`)
-- **In Vercel production** (when `VERCEL_ENV === "production"`): 
-  - Uses `VERCEL_PROJECT_PRODUCTION_URL` if available (prefixed with `https://`)
-  - Falls back to `VERCEL_URL` (prefixed with `https://`)
-- **Default fallback**: `https://${VERCEL_URL}` or `https://localhost:3000` if `VERCEL_URL` is not set
+- **In Vercel preview** (when `VERCEL_ENV === "preview"` or the framework-prefixed equivalent):
+  - Uses `VERCEL_BRANCH_URL` (or framework-prefixed equivalent) if available (prefixed with `https://` if needed)
+  - Falls back to `VERCEL_URL` (or framework-prefixed equivalent)
+- **In Vercel production** (when `VERCEL_ENV === "production"` or the framework-prefixed equivalent):
+  - Uses `VERCEL_PROJECT_PRODUCTION_URL` (or framework-prefixed equivalent) if available (prefixed with `https://` if needed)
+  - Falls back to `VERCEL_URL` (or framework-prefixed equivalent)
+- **Default fallback**: `https://${VERCEL_URL}` (or framework-prefixed equivalent) or `https://localhost:3000` if no Vercel URL is available
+
+### Framework Environment Variable Support
+
+Vercel exposes framework-prefixed copies of system environment variables for client bundles (for example `NEXT_PUBLIC_VERCEL_URL` in Next.js). `vercel-url` reads those first so `DEPLOYMENT_URL` resolves the same value on both server and client.
+
+Currently supported framework prefixes for `DEPLOYMENT_URL` resolution include:
+
+- `NEXT_PUBLIC_`
+- `NUXT_ENV_`
+- `REACT_APP_`
+- `GATSBY_`
+- `VITE_`
+- `PUBLIC_`
+- `VUE_APP_`
+- `REDWOOD_ENV_`
+- `SANITY_STUDIO_`
 
 ### Using `TUNNEL_URL` / `NEXT_PUBLIC_TUNNEL_URL` for Development
 
@@ -75,11 +91,12 @@ export TUNNEL_URL=https://your-tunnel.trycloudflare.com
 npm run dev
 ```
 
-The tunnel URL (`TUNNEL_URL` or `NEXT_PUBLIC_TUNNEL_URL`) can include the protocol (`https://`) or omit it - the package will add `https://` automatically if needed.
+The tunnel URL (`TUNNEL_URL`, `NEXT_PUBLIC_TUNNEL_URL`, `VITE_TUNNEL_URL`, or `PUBLIC_TUNNEL_URL`) can include the protocol (`https://`) or omit it - the package will add `https://` automatically if needed.
 
 ## Caveats
 
-- The package prioritizes `VERCEL_BRANCH_URL` for preview deployments, which may include branch-specific URLs for preview builds
+- The package prioritizes `VERCEL_BRANCH_URL` (or its framework-prefixed equivalent) for preview deployments, which may include branch-specific URLs for preview builds
+- Vercel does not automatically inject framework-prefixed env vars for local development, so local client-side tunnel overrides still require a public-prefixed tunnel var (for example `NEXT_PUBLIC_TUNNEL_URL`)
 - When running locally (not on Vercel), `VERCEL_ENV`, `VERCEL_URL`, `VERCEL_BRANCH_URL`, and `VERCEL_PROJECT_PRODUCTION_URL` will be `undefined`
 
 ## Exported Variables
@@ -94,6 +111,7 @@ The package exports the following:
 
 **Important Notes**: 
 - `DEPLOYMENT_URL` is always a string and will resolve to a valid URL in all environments
+- `DEPLOYMENT_URL` prefers framework-prefixed Vercel env vars when available so the client and server resolve the same deployment URL
 - The other Vercel environment variables (`VERCEL_ENV`, `VERCEL_URL`, etc.) may be `undefined` when not running on Vercel or when the specific variable is not available
 - These variables are only included in your bundle if you explicitly import them. Modern bundlers (like esbuild, Rollup, Webpack) will tree-shake unused exports, so importing only `DEPLOYMENT_URL` will not include the other variables in your final bundle
 
